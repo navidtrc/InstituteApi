@@ -25,6 +25,17 @@ namespace InstituteApi.Controller
             return Ok(result);
         }
 
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<IActionResult> GetById(int studentId, CancellationToken cancellationToken)
+        {
+            var result = await _context.Students
+                .SingleOrDefaultAsync(s => s.Id == studentId, cancellationToken);
+            if (result == null)
+                return NotFound();
+            return Ok(result.ToViewModel());
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post(StudentViewModel viewModel, CancellationToken cancellationToken)
         {
