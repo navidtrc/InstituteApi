@@ -37,7 +37,13 @@ namespace InstituteApi
             services.AddHttpClient();
             services.AddMvc();
             services.AddSwaggerGen();
-            services.AddCors();
+            services.AddCors(o => o.AddPolicy("AllowAnyOrigin",
+                      builder =>
+                      {
+                          builder.AllowAnyOrigin()
+                                 .AllowAnyMethod()
+                                 .AllowAnyHeader();
+                      }));
         }
 
 
@@ -45,10 +51,10 @@ namespace InstituteApi
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
 
-            app.UseCors(options =>
-                options.WithOrigins("https://localhost:5001", "http://localhost:5000")
-                .AllowAnyHeader()
-                .AllowAnyMethod());
+            //app.UseCors(options =>
+            //    options.WithOrigins("https://localhost:5001", "http://localhost:5000")
+            //    .AllowAnyHeader()
+            //    .AllowAnyMethod());
 
             app.IntializeDatabase();
 
@@ -66,7 +72,7 @@ namespace InstituteApi
             app.UseStaticFiles();
 
             app.UseRouting();
-
+            app.UseCors("AllowAnyOrigin");
             app.UseEndpoints(config =>
             {
                 config.MapControllers();
